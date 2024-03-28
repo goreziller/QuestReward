@@ -1,0 +1,7 @@
+name: QuestReward2
+version: 1.0
+main: eu.goreziller.Questreward
+api-version: '1.20'
+commands:
+  createquest:
+    description: Create a new Quest

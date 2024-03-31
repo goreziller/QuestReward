@@ -21,17 +21,21 @@ public class CreateCommand implements CommandExecutor
             sender.sendMessage("&aNur Spieler dürfen diesen Befehl nutzen.");
             return false;
         }
-
-        if(!(sender.isOp()))
-        {
-            sender.sendMessage("You dont have permission to use this command");
-            return false;
-        }
-
-        if(args.length == 0)
+        else
         {
             Player p = (Player) sender;
-            _instance.getSpawnHandler().createMenu(_instance, p, ChatColor.GOLD + "QuestReward").open(p);
+            if(p.hasPermission("questreward.create"))
+            {
+                if(args.length == 0)
+                {
+                    _instance.getSpawnHandler().createMenu(_instance, p, ChatColor.GOLD + "QuestReward").open(p);
+                }
+            }
+            else
+            {
+                sender.sendMessage("You dont have permission to use this command");
+                return false;
+            }
         }
 
         return false;

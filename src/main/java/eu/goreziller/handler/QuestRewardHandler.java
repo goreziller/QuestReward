@@ -1,5 +1,6 @@
 package eu.goreziller.handler;
 
+import eu.goreziller.Quest;
 import eu.goreziller.Questreward;
 import eu.goreziller.Reward;
 import me.filoghost.chestcommands.api.Icon;
@@ -28,16 +29,16 @@ public class QuestRewardHandler
     }
     ItemStack shield = new ItemStack(Material.OAK_SIGN);
     private String questname = null;
-    private String des = null;
+    private String description = null;
     private Reward rewards = null;
     public Menu createMenu(Plugin plugin, Player p, String title)
     {
         Menu createQuestMenu = Menu.create(plugin, title, 3);
 
-        Icon questname = new Icon()
+        Icon name = new Icon()
         {
             @Override
-            public @org.jetbrains.annotations.Nullable ItemStack render(@org.jetbrains.annotations.NotNull Player player)
+            public @Nullable ItemStack render(@NotNull Player player)
             {
                 ItemMeta questNameMeta = shield.getItemMeta();
                 ArrayList<String> lorelist = new ArrayList<>();
@@ -49,12 +50,13 @@ public class QuestRewardHandler
             }
 
             @Override
-            public void onClick(@org.jetbrains.annotations.NotNull MenuView menuView, @org.jetbrains.annotations.NotNull Player player)
+            public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
                 new AnvilGUI.Builder()
                         .onClose(stateSnapshot ->
                         {
                             stateSnapshot.getPlayer().sendMessage(stateSnapshot.getText());
+                            questname = stateSnapshot.getText();
                             createQuestMenu.open(p);
                         })
                         .onClick((slot, stateSnapshot) ->
@@ -65,7 +67,6 @@ public class QuestRewardHandler
                             }
                             else
                             {
-                                createQuestMenu.open(p);
                                 return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText("Try again"));
                             }
                         })
@@ -76,9 +77,9 @@ public class QuestRewardHandler
             }
         };
 
-        createQuestMenu.setIcon(1 , 1, questname);
+        createQuestMenu.setIcon(1 , 1, name);
 
-        Icon description = new Icon()
+        Icon descriptionIcon = new Icon()
         {
             @Override
             public @Nullable ItemStack render(@NotNull Player player)
@@ -95,13 +96,34 @@ public class QuestRewardHandler
             @Override
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
-
+                new AnvilGUI.Builder()
+                        .onClose(stateSnapshot ->
+                        {
+                            stateSnapshot.getPlayer().sendMessage(stateSnapshot.getText());
+                            questname = stateSnapshot.getText();
+                            createQuestMenu.open(p);
+                        })
+                        .onClick((slot, stateSnapshot) ->
+                        {
+                            if(slot != AnvilGUI.Slot.OUTPUT)
+                            {
+                                return Collections.emptyList();
+                            }
+                            else
+                            {
+                                return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText("Try again"));
+                            }
+                        })
+                        .text("")
+                        .title("Enter your Description")
+                        .plugin(_instance)
+                        .open(p);
             }
         };
 
-        createQuestMenu.setIcon(1, 4 , description);
+        createQuestMenu.setIcon(1, 4 , descriptionIcon);
 
-        Icon rewards = new Icon()
+        Icon rewardIcon = new Icon()
         {
             @Override
             public @Nullable ItemStack render(@NotNull Player player)
@@ -122,7 +144,7 @@ public class QuestRewardHandler
             }
         };
 
-        createQuestMenu.setIcon(1,7,rewards);
+        createQuestMenu.setIcon(1,7,rewardIcon);
 
         Icon confirm = new Icon()
         {
@@ -142,7 +164,16 @@ public class QuestRewardHandler
             @Override
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
-
+                if(questname == null || description == null || rewards == null)
+                {
+                    p.sendMessage("Please select all arrguments");
+                }
+                else
+                {
+                   Quest test = new Quest(questname, description, rewards);
+                   test.addToList(test);
+                   p.sendMessage(test.getActiveQuest().toString());
+                }
             }
         };
 

@@ -1,7 +1,10 @@
 package eu.goreziller;
 
+import java.util.ArrayList;
+
 public class Quest
 {
+    ArrayList<Quest> activeQuest = new ArrayList<>();
     private String name;
     private String description;
     private Reward rewards;
@@ -20,5 +23,20 @@ public class Quest
         this.description = description;
         this.rewards = rewards;
         this.remainingTime = remainingTime;
+    }
+
+    public void addToList(Quest quest)
+    {
+        activeQuest.add(quest);
+    }
+
+    public ArrayList<Quest> getActiveQuest()
+    {
+        return activeQuest;
+    }
+
+    public void setActiveQuest(ArrayList<Quest> activeQuest)
+    {
+        this.activeQuest = activeQuest;
     }
 }

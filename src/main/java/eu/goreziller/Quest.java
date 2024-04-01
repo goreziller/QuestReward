@@ -1,14 +1,28 @@
 package eu.goreziller;
 
-import java.util.ArrayList;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.jetbrains.annotations.NotNull;
 
-public class Quest
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+@SerializableAs("Quest")
+public class Quest implements ConfigurationSerializable
 {
     ArrayList<Quest> activeQuest = new ArrayList<>();
     private String name;
     private String description;
     private Reward rewards;
     private int remainingTime;
+
+    public Quest(String name, String description)
+    {
+        this.name = name;
+        this.description = description;
+    }
 
     public Quest(String name, String description, Reward rewards)
     {
@@ -38,5 +52,15 @@ public class Quest
     public void setActiveQuest(ArrayList<Quest> activeQuest)
     {
         this.activeQuest = activeQuest;
+    }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize()
+    {
+        Map<String, Object> quest = new HashMap<>();
+        quest.put("name", name);
+        quest.put("description", description);
+        return quest;
     }
 }

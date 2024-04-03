@@ -1,7 +1,10 @@
 package eu.goreziller;
 
 import eu.goreziller.command.CreateCommand;
-import eu.goreziller.handler.QuestRewardHandler;
+import eu.goreziller.handler.CreateQuestHandler;
+import eu.goreziller.handler.ShowQuestHandler;
+import eu.goreziller.listener.ChatListener;
+import eu.goreziller.listener.JoinListener;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -9,43 +12,43 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public final class Questreward extends JavaPlugin
 {
-    static {
-        ConfigurationSerialization.registerClass(Quest.class, "Quest");
-    }
-
+    ArrayList<Quest> questlist = new ArrayList<>();
     @Getter
-    private static Questreward _instance;
+    private static Questreward plugin;
     @Getter
-    private static QuestRewardHandler _spawnHandler;
-
-    public static QuestRewardHandler getSpawnHandler()
-    {
-        return _spawnHandler;
-    }
-
+    private static CreateQuestHandler createHandler;
+    private static ShowQuestHandler showHandler;
+    private ChatListener chatListener;
+    private JoinListener joinListener;
     private File file;
     private FileConfiguration config;
+
     public static Questreward getInstance()
     {
-        return _instance;
+        return plugin;
     }
 
     @Override
     public void onEnable()
     {
-        System.out.println(ChatColor.GREEN + "QuestReward has loaded");
+        plugin = this;
 
-        _instance = this;
-        _spawnHandler = new QuestRewardHandler(_instance);
-
+        registerClass();
         createFolder();
+        onload();
         registerCommands();
+        registerEvents();
+
+        createHandler = new CreateQuestHandler(plugin, chatListener);
+
+        System.out.println(ChatColor.GREEN + "QuestReward has loaded");
+        System.out.println(questlist.get(0));
     }
 
     private void createFolder()
@@ -58,11 +61,11 @@ public final class Questreward extends JavaPlugin
         }
 
         config = new YamlConfiguration();
-        _instance.getConfig().set("test", new Quest("quest1", "do something"));
-        //config.set("test", new Quest("quest1", "do something"));
+        plugin.getConfig().set("test", new Quest("quest1", "do something"));
+
         try
         {
-            _instance.saveConfig();
+            plugin.saveConfig();
             config.load(file);
         }
         catch (IOException | InvalidConfigurationException e)
@@ -71,14 +74,42 @@ public final class Questreward extends JavaPlugin
         }
     }
 
+    public void onload()
+    {
+        questlist.add((Quest) plugin.getConfig().get("test"));
+    }
+
     public void registerCommands()
     {
-        getCommand("createquest").setExecutor(new CreateCommand(_instance));
+        getCommand("createquest").setExecutor(new CreateCommand(plugin));
+    }
+
+    public void registerEvents()
+    {
+        chatListener = new ChatListener();
+        joinListener = new JoinListener();
+        getServer().getPluginManager().registerEvents(chatListener, plugin);
+        getServer().getPluginManager().registerEvents(joinListener, plugin);
+    }
+
+    public void registerClass()
+    {
+        ConfigurationSerialization.registerClass(Quest.class, "Quest");
     }
 
     @Override
     public void onDisable()
     {
         System.out.println(ChatColor.RED + "QuestReward has been disabled");
+    }
+
+    public static CreateQuestHandler getCreateHandler()
+    {
+        return createHandler;
+    }
+
+    public static ShowQuestHandler getShowHandler()
+    {
+        return showHandler;
     }
 }

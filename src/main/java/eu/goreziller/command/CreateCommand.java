@@ -28,7 +28,7 @@ public class CreateCommand implements CommandExecutor
             {
                 if(args.length == 0)
                 {
-                    _instance.getSpawnHandler().createMenu(_instance, p, ChatColor.GOLD + "QuestReward").open(p);
+                    _instance.getCreateHandler().createMenu(_instance, p, ChatColor.GOLD + "QuestReward").open(p);
                 }
             }
             else

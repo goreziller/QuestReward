@@ -1,7 +1,6 @@
 package eu.goreziller;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.jetbrains.annotations.NotNull;
 
@@ -59,8 +58,14 @@ public class Quest implements ConfigurationSerializable
     public Map<String, Object> serialize()
     {
         Map<String, Object> quest = new HashMap<>();
-        quest.put("name", name);
+        quest.put("questname", name);
         quest.put("description", description);
         return quest;
+    }
+
+    @Override
+    public String toString()
+    {
+        return name + " " + description;
     }
 }

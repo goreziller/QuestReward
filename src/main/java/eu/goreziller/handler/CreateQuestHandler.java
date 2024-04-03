@@ -3,6 +3,7 @@ package eu.goreziller.handler;
 import eu.goreziller.Quest;
 import eu.goreziller.Questreward;
 import eu.goreziller.Reward;
+import eu.goreziller.listener.ChatListener;
 import me.filoghost.chestcommands.api.Icon;
 import me.filoghost.chestcommands.api.Menu;
 import me.filoghost.chestcommands.api.MenuView;
@@ -15,17 +16,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
-public class QuestRewardHandler
+public class CreateQuestHandler
 {
     private final Questreward _instance;
-    public QuestRewardHandler(Questreward instance)
+    private final ChatListener listener;
+    public CreateQuestHandler(Questreward instance, ChatListener listener)
     {
         _instance = instance;
+        this.listener = listener;
     }
     ItemStack shield = new ItemStack(Material.OAK_SIGN);
     private String questname = null;
@@ -52,23 +53,17 @@ public class QuestRewardHandler
             @Override
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
-                new AnvilGUI.Builder()
+                AnvilGUI builder = new AnvilGUI.Builder()
                         .onClose(stateSnapshot ->
                         {
                             stateSnapshot.getPlayer().sendMessage(stateSnapshot.getText());
                             questname = stateSnapshot.getText();
+
                             createQuestMenu.open(p);
                         })
                         .onClick((slot, stateSnapshot) ->
                         {
-                            if(slot != AnvilGUI.Slot.OUTPUT)
-                            {
-                                return Collections.emptyList();
-                            }
-                            else
-                            {
-                                return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText("Try again"));
-                            }
+                            return Collections.emptyList();
                         })
                         .text("")
                         .title("Enter your Questname")
@@ -96,28 +91,18 @@ public class QuestRewardHandler
             @Override
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
-                new AnvilGUI.Builder()
-                        .onClose(stateSnapshot ->
-                        {
-                            stateSnapshot.getPlayer().sendMessage(stateSnapshot.getText());
-                            questname = stateSnapshot.getText();
-                            createQuestMenu.open(p);
-                        })
-                        .onClick((slot, stateSnapshot) ->
-                        {
-                            if(slot != AnvilGUI.Slot.OUTPUT)
-                            {
-                                return Collections.emptyList();
-                            }
-                            else
-                            {
-                                return Arrays.asList(AnvilGUI.ResponseAction.replaceInputText("Try again"));
-                            }
-                        })
-                        .text("")
-                        .title("Enter your Description")
-                        .plugin(_instance)
-                        .open(p);
+                p.closeInventory();
+                player.sendMessage(ChatColor.BLUE + "Please enter your description");
+                if(p.getName().equalsIgnoreCase("waitforchat") && listener.getMessage() == null)
+                {
+                    listener.waitForChat();
+                }
+                else
+                {
+                    description = listener.getMessage();
+                    p.sendMessage(description);
+                }
+
             }
         };
 

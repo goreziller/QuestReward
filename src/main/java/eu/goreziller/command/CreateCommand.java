@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 @RequiredArgsConstructor
 public class CreateCommand implements CommandExecutor
 {
-    private final Questreward _instance;
+    private final Questreward plugin;
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args)
@@ -28,7 +28,7 @@ public class CreateCommand implements CommandExecutor
             {
                 if(args.length == 0)
                 {
-                    _instance.getCreateHandler().createMenu(_instance, p, ChatColor.GOLD + "QuestReward").open(p);
+                    plugin.getCreateHandler().createQuestMenu(plugin, p, ChatColor.GOLD + "QuestReward").open(p);
                 }
             }
             else

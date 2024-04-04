@@ -32,7 +32,7 @@ public class CreateQuestHandler
     private String questname = null;
     private String description = null;
     private Reward rewards = null;
-    public Menu createMenu(Plugin plugin, Player p, String title)
+    public Menu createQuestMenu(Plugin plugin, Player p, String title)
     {
         Menu createQuestMenu = Menu.create(plugin, title, 3);
 

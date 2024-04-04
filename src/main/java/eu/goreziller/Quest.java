@@ -53,6 +53,16 @@ public class Quest implements ConfigurationSerializable
         this.activeQuest = activeQuest;
     }
 
+    public String getName()
+    {
+        return name;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
     @NotNull
     @Override
     public Map<String, Object> serialize()

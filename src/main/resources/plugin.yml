@@ -6,3 +6,6 @@ commands:
   createquest:
     description: Create a new Quest
     permission: questreward.create
+  quest:
+    description: Show your active Quest or choose your Quest
+    permission: questreward.show

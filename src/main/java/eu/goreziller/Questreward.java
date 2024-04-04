@@ -1,6 +1,7 @@
 package eu.goreziller;
 
 import eu.goreziller.command.CreateCommand;
+import eu.goreziller.command.ShowCommand;
 import eu.goreziller.handler.CreateQuestHandler;
 import eu.goreziller.handler.ShowQuestHandler;
 import eu.goreziller.listener.ChatListener;
@@ -15,24 +16,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public final class Questreward extends JavaPlugin
 {
+    private HashMap<UUID, Player> players = new HashMap<>();
     ArrayList<Quest> questlist = new ArrayList<>();
     @Getter
     private static Questreward plugin;
     @Getter
     private static CreateQuestHandler createHandler;
+    @Getter
     private static ShowQuestHandler showHandler;
     private ChatListener chatListener;
     private JoinListener joinListener;
     private File file;
     private FileConfiguration config;
-
-    public static Questreward getInstance()
-    {
-        return plugin;
-    }
 
     @Override
     public void onEnable()
@@ -46,6 +46,7 @@ public final class Questreward extends JavaPlugin
         registerEvents();
 
         createHandler = new CreateQuestHandler(plugin, chatListener);
+        showHandler = new ShowQuestHandler(plugin);
 
         System.out.println(ChatColor.GREEN + "QuestReward has loaded");
         System.out.println(questlist.get(0));
@@ -77,17 +78,19 @@ public final class Questreward extends JavaPlugin
     public void onload()
     {
         questlist.add((Quest) plugin.getConfig().get("test"));
+
     }
 
     public void registerCommands()
     {
         getCommand("createquest").setExecutor(new CreateCommand(plugin));
+        getCommand("quest").setExecutor(new ShowCommand(plugin));
     }
 
     public void registerEvents()
     {
         chatListener = new ChatListener();
-        joinListener = new JoinListener();
+        joinListener = new JoinListener(plugin);
         getServer().getPluginManager().registerEvents(chatListener, plugin);
         getServer().getPluginManager().registerEvents(joinListener, plugin);
     }
@@ -111,5 +114,15 @@ public final class Questreward extends JavaPlugin
     public static ShowQuestHandler getShowHandler()
     {
         return showHandler;
+    }
+
+    public Player getPlay(UUID playerID)
+    {
+        return players.get(playerID);
+    }
+
+    public HashMap<UUID, Player> getPlayers()
+    {
+        return players;
     }
 }

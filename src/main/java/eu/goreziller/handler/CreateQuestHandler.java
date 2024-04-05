@@ -1,8 +1,8 @@
 package eu.goreziller.handler;
 
-import eu.goreziller.Quest;
+import eu.goreziller.objects.Quest;
 import eu.goreziller.Questreward;
-import eu.goreziller.Reward;
+import eu.goreziller.objects.Reward;
 import eu.goreziller.listener.ChatListener;
 import me.filoghost.chestcommands.api.Icon;
 import me.filoghost.chestcommands.api.Menu;

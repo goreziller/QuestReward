@@ -1,4 +1,4 @@
-package eu.goreziller;
+package eu.goreziller.objects;
 
 import java.util.ArrayList;
 

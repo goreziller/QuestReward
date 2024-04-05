@@ -7,6 +7,8 @@ import eu.goreziller.handler.CreateQuestHandler;
 import eu.goreziller.handler.ShowQuestHandler;
 import eu.goreziller.listener.ChatListener;
 import eu.goreziller.listener.JoinListener;
+import eu.goreziller.objects.CurrentPlayer;
+import eu.goreziller.objects.Quest;
 import lombok.Getter;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.InvalidConfigurationException;

@@ -1,4 +1,4 @@
-package eu.goreziller;
+package eu.goreziller.objects;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.SerializableAs;

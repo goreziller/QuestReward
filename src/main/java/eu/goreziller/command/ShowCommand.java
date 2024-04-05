@@ -1,7 +1,7 @@
 package eu.goreziller.command;
 
-import eu.goreziller.CurrentPlayer;
-import eu.goreziller.Quest;
+import eu.goreziller.objects.CurrentPlayer;
+import eu.goreziller.objects.Quest;
 import eu.goreziller.Questreward;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;

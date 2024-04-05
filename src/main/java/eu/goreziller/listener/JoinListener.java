@@ -1,6 +1,7 @@
 package eu.goreziller.listener;
 
-import eu.goreziller.CurrentPlayer;
+import eu.goreziller.enums.QuestRewardEnum;
+import eu.goreziller.objects.CurrentPlayer;
 import eu.goreziller.Questreward;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -32,12 +33,12 @@ public class JoinListener implements Listener
 
             if(currentPlayer.getCurrentQuest() != null)
             {
-                p.sendMessage(ChatColor.GOLD + "Current Quest Information");
-                p.sendMessage(ChatColor.BLUE + "Questname: " + currentPlayer.getCurrentQuestName() + "Description: " + currentPlayer.getCurrentQuestDescription());
+                p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.GOLD + "Current Quest Information");
+                p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.BLUE + "Questname: " + currentPlayer.getCurrentQuestName() + "Description: " + currentPlayer.getCurrentQuestDescription());
             }
             else
             {
-                p.sendMessage("You have no active Quest");
+                p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.BLUE + "You have no active Quest");
             }
         }
     }

@@ -1,5 +1,6 @@
 package eu.goreziller;
 
+import eu.goreziller.command.CancelCommand;
 import eu.goreziller.command.CreateCommand;
 import eu.goreziller.command.ShowCommand;
 import eu.goreziller.handler.CreateQuestHandler;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 public final class Questreward extends JavaPlugin
 {
-    private HashMap<UUID, Player> players = new HashMap<>();
+    private HashMap<UUID, CurrentPlayer> players = new HashMap<>();
     ArrayList<Quest> questlist = new ArrayList<>();
     @Getter
     private static Questreward plugin;
@@ -85,6 +86,7 @@ public final class Questreward extends JavaPlugin
     {
         getCommand("createquest").setExecutor(new CreateCommand(plugin));
         getCommand("quest").setExecutor(new ShowCommand(plugin));
+        getCommand("cancelquest").setExecutor(new CancelCommand(plugin));
     }
 
     public void registerEvents()
@@ -116,12 +118,12 @@ public final class Questreward extends JavaPlugin
         return showHandler;
     }
 
-    public Player getPlay(UUID playerID)
+    public CurrentPlayer getPlay(UUID playerID)
     {
         return players.get(playerID);
     }
 
-    public HashMap<UUID, Player> getPlayers()
+    public HashMap<UUID, CurrentPlayer> getPlayers()
     {
         return players;
     }

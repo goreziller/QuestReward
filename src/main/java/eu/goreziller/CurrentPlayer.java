@@ -2,12 +2,12 @@ package eu.goreziller;
 
 import java.util.UUID;
 
-public class Player
+public class CurrentPlayer
 {
     private UUID playerId;
     private Quest currentQuest;
 
-    public Player(UUID playerId)
+    public CurrentPlayer(UUID playerId)
     {
         this.playerId = playerId;
     }
@@ -29,13 +29,11 @@ public class Player
 
     public String getCurrentQuestName()
     {
-        if (currentQuest != null)
-        {
-            return currentQuest.getName();
-        }
-        else
-        {
-            return "No current quest";
-        }
+        return currentQuest.getName();
+    }
+
+    public String getCurrentQuestDescription()
+    {
+        return currentQuest.getDescription();
     }
 }

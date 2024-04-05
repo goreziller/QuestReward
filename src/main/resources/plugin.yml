@@ -9,3 +9,6 @@ commands:
   quest:
     description: Show your active Quest or choose your Quest
     permission: questreward.show
+  cancelquest:
+    description: Cancel your active Quest
+    permission: questreward.cancel

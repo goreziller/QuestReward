@@ -1,7 +1,6 @@
 package eu.goreziller.command;
 
 import eu.goreziller.CurrentPlayer;
-import eu.goreziller.Quest;
 import eu.goreziller.Questreward;
 import lombok.RequiredArgsConstructor;
 import org.bukkit.ChatColor;
@@ -13,7 +12,7 @@ import org.bukkit.entity.Player;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-public class ShowCommand implements CommandExecutor
+public class CancelCommand implements CommandExecutor
 {
     private final Questreward plugin;
     private UUID playerID;
@@ -31,21 +30,13 @@ public class ShowCommand implements CommandExecutor
             Player p = (Player) sender;
             playerID =  p.getUniqueId();
             currentPlayer = plugin.getPlay(playerID);
-            Quest currentQuest = (Quest) plugin.getConfig().get("test");
-            currentPlayer.setCurrentQuest(currentQuest);
-            if(p.hasPermission("questreward.show"))
+
+            if(p.hasPermission("questreward.cancel"))
             {
                 if(args.length == 0)
                 {
-                    if(currentPlayer.getCurrentQuest() != null)
-                    {
-                        p.sendMessage(ChatColor.GOLD + "Current Quest Information");
-                        p.sendMessage(ChatColor.BLUE + "Questname: " + currentQuest.getName() + "Description: " + currentQuest.getDescription());
-                    }
-                    else
-                    {
-                        plugin.getShowHandler().createShowMenu(plugin, p, ChatColor.GOLD + "QuestReward").open(p);
-                    }
+                    currentPlayer.setCurrentQuest(null);
+                    p.sendMessage(ChatColor.RED + "You have canceled your current quest");
                 }
             }
             else

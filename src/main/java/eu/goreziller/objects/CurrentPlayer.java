@@ -19,6 +19,12 @@ public class CurrentPlayer implements ConfigurationSerializable
         this.playerId = playerId;
     }
 
+    public CurrentPlayer(UUID playerID, Quest currentQuest)
+    {
+        this.playerId = playerID;
+        this.currentQuest = currentQuest;
+    }
+
     public UUID getPlayerId()
     {
         return playerId;

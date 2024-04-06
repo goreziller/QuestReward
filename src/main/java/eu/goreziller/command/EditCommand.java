@@ -18,7 +18,7 @@ public class EditCommand implements CommandExecutor
     {
         if(!(sender instanceof Player))
         {
-            sender.sendMessage("&aNur Spieler dürfen diesen Befehl nutzen.");
+            sender.sendMessage("&aOnly players may use this command");
             return false;
         }
         else

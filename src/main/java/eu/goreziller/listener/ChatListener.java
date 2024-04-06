@@ -1,32 +1,41 @@
 package eu.goreziller.listener;
 
 import eu.goreziller.Questreward;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ChatListener implements Listener
 {
-    String message;
-    private boolean waitForChat = false;
+    private Questreward plugin;
+    private Player playerWaitingFor;
+    private CompletableFuture<String> messageFuture = new CompletableFuture<>();
 
-    public void waitForChat()
+    public ChatListener(Questreward plugin)
     {
-        waitForChat = true;
+        this.plugin = plugin;
     }
-
-    @EventHandler
-    public void onPlayerChat(AsyncPlayerChatEvent event)
+    public CompletableFuture<String> waitForChat(Player player)
     {
-        if (waitForChat)
+        messageFuture = new CompletableFuture<>();
+        playerWaitingFor = player;
+
+        plugin.getServer().getPluginManager().registerEvents(new Listener()
         {
-            message = event.getMessage();
-            waitForChat = false;
-        }
-    }
-
-    public String getMessage()
-    {
-        return message;
+            @EventHandler
+            public void onPlayerChat(AsyncPlayerChatEvent event)
+            {
+                if (event.getPlayer().equals(playerWaitingFor))
+                {
+                    messageFuture.complete(event.getMessage());
+                    event.setCancelled(true);
+                    AsyncPlayerChatEvent.getHandlerList().unregister(this);
+                }
+            }
+        }, plugin);
+        return messageFuture;
     }
 }

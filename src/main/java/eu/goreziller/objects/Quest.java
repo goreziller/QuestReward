@@ -73,6 +73,13 @@ public class Quest implements ConfigurationSerializable
         return quest;
     }
 
+    public static Quest deserialize(Map<String, Object> serialized)
+    {
+        String name = (String) serialized.get("questname");
+        String description = (String) serialized.get("description");
+        return new Quest(name, description);
+    }
+
     @Override
     public String toString()
     {

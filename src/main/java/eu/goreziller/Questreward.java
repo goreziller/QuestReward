@@ -105,7 +105,7 @@ public final class Questreward extends JavaPlugin
 
     public void registerEvents()
     {
-        chatListener = new ChatListener();
+        chatListener = new ChatListener(plugin);
         joinListener = new JoinListener(plugin);
         getServer().getPluginManager().registerEvents(chatListener, plugin);
         getServer().getPluginManager().registerEvents(joinListener, plugin);
@@ -169,6 +169,7 @@ public final class Questreward extends JavaPlugin
     {
         return questFile;
     }
+
 
     public HashMap<UUID, CurrentPlayer> getPlayers()
     {

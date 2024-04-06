@@ -1,5 +1,6 @@
 package eu.goreziller.command;
 
+import eu.goreziller.enums.QuestRewardEnum;
 import eu.goreziller.objects.CurrentPlayer;
 import eu.goreziller.Questreward;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class CancelCommand implements CommandExecutor
     {
         if(!(sender instanceof Player))
         {
-            sender.sendMessage("&aNur Spieler dürfen diesen Befehl nutzen.");
+            sender.sendMessage("&aOnly players may use this command.");
             return false;
         }
         else
@@ -36,7 +37,7 @@ public class CancelCommand implements CommandExecutor
                 if(args.length == 0)
                 {
                     currentPlayer.setCurrentQuest(null);
-                    p.sendMessage(ChatColor.RED + "You have canceled your current quest");
+                    p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.RED + "You have canceled your current quest");
                 }
             }
             else

@@ -1,5 +1,6 @@
 package eu.goreziller.command;
 
+import eu.goreziller.enums.QuestRewardEnum;
 import eu.goreziller.objects.CurrentPlayer;
 import eu.goreziller.objects.Quest;
 import eu.goreziller.Questreward;
@@ -23,7 +24,7 @@ public class ShowCommand implements CommandExecutor
     {
         if(!(sender instanceof Player))
         {
-            sender.sendMessage("&aNur Spieler dürfen diesen Befehl nutzen.");
+            sender.sendMessage("&aOnly players may use this command.");
             return false;
         }
         else
@@ -39,8 +40,8 @@ public class ShowCommand implements CommandExecutor
                 {
                     if(currentPlayer.getCurrentQuest() != null)
                     {
-                        p.sendMessage(ChatColor.GOLD + "Current Quest Information");
-                        p.sendMessage(ChatColor.BLUE + "Questname: " + currentQuest.getName() + "Description: " + currentQuest.getDescription());
+                        p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.GOLD + "Current Quest Information");
+                        p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.BLUE + "Questname: " + currentQuest.getName() + "Description: " + currentQuest.getDescription());
                     }
                     else
                     {

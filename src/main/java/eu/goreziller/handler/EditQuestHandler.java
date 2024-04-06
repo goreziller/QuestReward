@@ -5,20 +5,19 @@ import me.filoghost.chestcommands.api.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class ShowQuestHandler
+public class EditQuestHandler
 {
     private final Questreward instance;
 
-    public ShowQuestHandler(Questreward plugin)
+    public EditQuestHandler(Questreward plugin)
     {
         instance = plugin;
     }
 
-    public Menu createShowMenu(Plugin plugin, Player p, String title)
+    public Menu createEditMenu(Plugin plugin, Player p, String title)
     {
-        Menu showMenu = Menu.create(plugin, title, 3);
+        Menu editMenu = Menu.create(plugin, title, 3);
 
-        return showMenu;
+        return editMenu;
     }
 }
-

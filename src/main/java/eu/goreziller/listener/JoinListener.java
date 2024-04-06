@@ -31,6 +31,12 @@ public class JoinListener implements Listener
             plugin.getPlayers().put(playerId, currentPlayer);
             plugin.getLogger().info("Player " + playerId + " joined the game.");
 
+            if(plugin.getPlayerConfig().get(event.getPlayer().getName()) == null)
+            {
+                plugin.getPlayerConfig().set(event.getPlayer().getName(), new CurrentPlayer(playerId));
+                plugin.saveConfig(plugin.getPlayerConfig(), plugin.getPlayerFile());
+            }
+
             if(currentPlayer.getCurrentQuest() != null)
             {
                 p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.GOLD + "Current Quest Information");

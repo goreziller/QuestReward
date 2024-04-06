@@ -4,6 +4,7 @@ import eu.goreziller.command.CancelCommand;
 import eu.goreziller.command.CreateCommand;
 import eu.goreziller.command.ShowCommand;
 import eu.goreziller.handler.CreateQuestHandler;
+import eu.goreziller.handler.EditQuestHandler;
 import eu.goreziller.handler.ShowQuestHandler;
 import eu.goreziller.listener.ChatListener;
 import eu.goreziller.listener.JoinListener;
@@ -32,10 +33,14 @@ public final class Questreward extends JavaPlugin
     private static CreateQuestHandler createHandler;
     @Getter
     private static ShowQuestHandler showHandler;
+    @Getter
+    private static EditQuestHandler editHandler;
     private ChatListener chatListener;
     private JoinListener joinListener;
-    private File file;
-    private FileConfiguration config;
+    private File questFile;
+    private File playerFile;
+    private FileConfiguration questConfig;
+    private FileConfiguration playerConfig;
 
     @Override
     public void onEnable()
@@ -52,25 +57,33 @@ public final class Questreward extends JavaPlugin
         showHandler = new ShowQuestHandler(plugin);
 
         System.out.println(ChatColor.GREEN + "QuestReward has loaded");
-        System.out.println(questlist.get(0));
     }
 
     private void createFolder()
     {
-        file = new File(getDataFolder(), "config.yml");
-        if (!file.exists())
+        questFile = new File(getDataFolder(), "config.yml");
+        playerFile = new File(getDataFolder(), "player.yml");
+        if (!questFile.exists())
         {
-            file.getParentFile().mkdirs();
+            questFile.getParentFile().mkdirs();
             saveResource("config.yml", false);
         }
+        if(!playerFile.exists())
+        {
+            playerFile.getParentFile().mkdirs();
+            saveResource("player.yml", false);
+        }
 
-        config = new YamlConfiguration();
-        plugin.getConfig().set("test", new Quest("quest1", "do something"));
+        questConfig = new YamlConfiguration();
+        playerConfig = new YamlConfiguration();
+
+        plugin.getQuestConfig().set("test", new Quest("quest1", "do something"));
 
         try
         {
-            plugin.saveConfig();
-            config.load(file);
+            saveConfig(questConfig, questFile);
+            questConfig.load(questFile);
+            playerConfig.load(playerFile);
         }
         catch (IOException | InvalidConfigurationException e)
         {
@@ -80,8 +93,7 @@ public final class Questreward extends JavaPlugin
 
     public void onload()
     {
-        questlist.add((Quest) plugin.getConfig().get("test"));
-
+        questlist.add((Quest) plugin.getQuestConfig().get("test"));
     }
 
     public void registerCommands()
@@ -102,6 +114,19 @@ public final class Questreward extends JavaPlugin
     public void registerClass()
     {
         ConfigurationSerialization.registerClass(Quest.class, "Quest");
+        ConfigurationSerialization.registerClass(CurrentPlayer.class, "Player");
+    }
+
+    public void saveConfig(FileConfiguration config, File configFile)
+    {
+        try
+        {
+            config.save(configFile);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -123,6 +148,26 @@ public final class Questreward extends JavaPlugin
     public CurrentPlayer getPlay(UUID playerID)
     {
         return players.get(playerID);
+    }
+
+    public FileConfiguration getQuestConfig()
+    {
+        return questConfig;
+    }
+
+    public FileConfiguration getPlayerConfig()
+    {
+        return playerConfig;
+    }
+
+    public File getPlayerFile()
+    {
+        return playerFile;
+    }
+
+    public File getQuestFile()
+    {
+        return questFile;
     }
 
     public HashMap<UUID, CurrentPlayer> getPlayers()

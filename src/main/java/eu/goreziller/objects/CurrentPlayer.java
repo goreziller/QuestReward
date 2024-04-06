@@ -1,8 +1,15 @@
 package eu.goreziller.objects;
 
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
-public class CurrentPlayer
+@SerializableAs("Player")
+public class CurrentPlayer implements ConfigurationSerializable
 {
     private UUID playerId;
     private Quest currentQuest;
@@ -35,5 +42,15 @@ public class CurrentPlayer
     public String getCurrentQuestDescription()
     {
         return currentQuest.getDescription();
+    }
+
+    @NotNull
+    @Override
+    public Map<String, Object> serialize()
+    {
+        Map<String, Object> currentPlayer = new HashMap<>();
+        currentPlayer.put("playerID", playerId.toString());
+        currentPlayer.put("currentQuest", currentQuest);
+        return currentPlayer;
     }
 }

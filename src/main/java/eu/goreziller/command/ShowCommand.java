@@ -29,7 +29,7 @@ public class ShowCommand implements CommandExecutor
         else
         {
             Player p = (Player) sender;
-            playerID =  p.getUniqueId();
+            playerID = p.getUniqueId();
             currentPlayer = plugin.getPlay(playerID);
             Quest currentQuest = (Quest) plugin.getConfig().get("test");
             currentPlayer.setCurrentQuest(currentQuest);

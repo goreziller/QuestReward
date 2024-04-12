@@ -28,7 +28,7 @@ public class EditCommand implements CommandExecutor
             {
                 if(args.length == 0)
                 {
-                    plugin.getEditHandler().createEditMenu(plugin, p, ChatColor.GOLD + "QuestReward").open(p);
+                    plugin.getEditHandler().createEditMenu(plugin, p, ChatColor.GOLD + "Edit Quest").open(p);
                 }
             }
             else

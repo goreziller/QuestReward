@@ -32,8 +32,7 @@ public class ShowCommand implements CommandExecutor
             Player p = (Player) sender;
             playerID = p.getUniqueId();
             currentPlayer = plugin.getPlay(playerID);
-            Quest currentQuest = (Quest) plugin.getConfig().get("test");
-            currentPlayer.setCurrentQuest(currentQuest);
+
             if(p.hasPermission("questreward.show"))
             {
                 if(args.length == 0)
@@ -41,7 +40,7 @@ public class ShowCommand implements CommandExecutor
                     if(currentPlayer.getCurrentQuest() != null)
                     {
                         p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.GOLD + "Current Quest Information");
-                        p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.BLUE + "Questname: " + currentQuest.getName() + "Description: " + currentQuest.getDescription());
+                        p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.BLUE + "Questname: " + currentPlayer.getCurrentQuest().getName() + "Description: " + currentPlayer.getCurrentQuest().getDescription());
                     }
                     else
                     {

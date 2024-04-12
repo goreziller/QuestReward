@@ -38,6 +38,7 @@ public class CancelCommand implements CommandExecutor
                 {
                     currentPlayer.setCurrentQuest(null);
                     p.sendMessage(QuestRewardEnum.Prefix.getColoredName() + ChatColor.RED + "You have canceled your current quest");
+                    plugin.saveConfig(plugin.getPlayerConfig(), plugin.getPlayerFile());
                 }
             }
             else

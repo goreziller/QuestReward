@@ -28,7 +28,7 @@ public class CreateCommand implements CommandExecutor
             {
                 if(args.length == 0)
                 {
-                    plugin.getCreateHandler().createQuestMenu(plugin, p, ChatColor.GOLD + "QuestReward").open(p);
+                    plugin.getCreateHandler().createQuestMenu(plugin, p, ChatColor.GOLD + "Create Quest").open(p);
                 }
             }
             else

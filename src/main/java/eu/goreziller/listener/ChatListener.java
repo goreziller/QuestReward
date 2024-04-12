@@ -6,6 +6,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 
+
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ChatListener implements Listener
@@ -18,24 +20,27 @@ public class ChatListener implements Listener
     {
         this.plugin = plugin;
     }
-    public CompletableFuture<String> waitForChat(Player player)
-    {
+
+    public CompletableFuture<String> waitForChat(Player player) {
         messageFuture = new CompletableFuture<>();
         playerWaitingFor = player;
 
-        plugin.getServer().getPluginManager().registerEvents(new Listener()
-        {
+        plugin.getServer().getPluginManager().registerEvents(new Listener() {
             @EventHandler
-            public void onPlayerChat(AsyncPlayerChatEvent event)
-            {
-                if (event.getPlayer().equals(playerWaitingFor))
-                {
-                    messageFuture.complete(event.getMessage());
+            public void onPlayerChat(AsyncPlayerChatEvent event) {
+                if (event.getPlayer().equals(playerWaitingFor)) {
                     event.setCancelled(true);
-                    AsyncPlayerChatEvent.getHandlerList().unregister(this);
+                    messageFuture.complete(event.getMessage());
+                    playerWaitingFor = null;
                 }
             }
         }, plugin);
         return messageFuture;
+    }
+
+
+    public void unregisterListener()
+    {
+        AsyncPlayerChatEvent.getHandlerList().unregister(this);
     }
 }

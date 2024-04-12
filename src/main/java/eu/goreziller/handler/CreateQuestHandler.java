@@ -7,29 +7,36 @@ import eu.goreziller.listener.ChatListener;
 import me.filoghost.chestcommands.api.Icon;
 import me.filoghost.chestcommands.api.Menu;
 import me.filoghost.chestcommands.api.MenuView;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class CreateQuestHandler
 {
-    private final Questreward plugin;
+    private final Questreward instance;
     private final ChatListener listener;
     private Menu createQuestMenu;
     ItemStack shield = new ItemStack(Material.OAK_SIGN);
     private String questname = null;
     private String description = null;
+    private boolean waitingForInput = false;
     private Reward rewards = null;
+    private boolean waitingForNameInput = false;
+    private BukkitTask task;
 
     public CreateQuestHandler(Questreward plugin, ChatListener listener)
     {
-        this.plugin = plugin;
+        instance = plugin;
         this.listener = listener;
     }
 
@@ -41,6 +48,7 @@ public class CreateQuestHandler
         createQuestMenu.setIcon(1, 4, createDescriptionIcon());
         createQuestMenu.setIcon(1, 7, createRewardIcon());
         createQuestMenu.setIcon(2, 4, createConfirmIcon());
+        cancelTask();
 
         return createQuestMenu;
     }
@@ -65,12 +73,16 @@ public class CreateQuestHandler
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
                 player.closeInventory();
-                player.sendMessage(ChatColor.BLUE + "Please enter your questname");
-                listener.waitForChat(player).thenAccept(message ->
+                if (!waitingForNameInput)
                 {
-                    questname = message;
-                    //Open Inventory again
-                });
+                    player.sendMessage(ChatColor.BLUE + "Please enter your Questname");
+                    waitingForNameInput = true;
+                    listener.waitForChat(player).thenAccept(message ->
+                    {
+                        questname = message;
+                        receiveQuestName(player, questname);
+                    });
+                }
             }
         };
     }
@@ -99,7 +111,7 @@ public class CreateQuestHandler
                 listener.waitForChat(player).thenAccept(message ->
                 {
                     description = message;
-                    //Open Inventory again
+                    receiveDescription(player, description);
                 });
             }
         };
@@ -149,14 +161,52 @@ public class CreateQuestHandler
             @Override
             public void onClick(@NotNull MenuView menuView, @NotNull Player player)
             {
-                if (questname == null || description == null || rewards == null) {
+                if (questname == null || description == null || rewards == null)
+                {
                     player.sendMessage("Please select all arrguments");
-                } else {
+                }
+                else
+                {
                     Quest test = new Quest(questname, description, rewards);
                     test.addToList(test);
                     player.sendMessage(test.getActiveQuest().toString());
                 }
             }
         };
+    }
+
+    public void receiveQuestName(Player player, String questName)
+    {
+        this.questname = questName;
+        waitingForInput = false;
+        listener.unregisterListener();
+        player.sendMessage(questName);
+        task = Bukkit.getScheduler().runTask(instance, () ->
+        {
+            Questreward.getCreateHandler().createQuestMenu(instance, player, "Create Quest").open(player);
+        });
+    }
+
+    public void receiveDescription(Player player, String description)
+    {
+        this.description = description;
+        waitingForInput = false;
+        listener.unregisterListener();
+        player.sendMessage(description);
+        Bukkit.getScheduler().runTask(instance, () ->
+        {
+            if(description != null)
+            {
+                Questreward.getCreateHandler().createQuestMenu(instance, player, "Create Quest").open(player);
+            }
+        });
+    }
+
+    public void cancelTask()
+    {
+        if(task != null)
+        {
+            task.cancel();
+        }
     }
 }

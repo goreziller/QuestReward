@@ -31,7 +31,7 @@ public class JoinListener implements Listener
             CurrentPlayer currentPlayer = new CurrentPlayer(playerId);
             plugin.getPlayers().put(playerId, currentPlayer);
 
-            Quest currentQuest = (Quest) plugin.getConfig().get("test");
+            Quest currentQuest = (Quest) plugin.getConfig().get("quest1");
             if(plugin.getPlayerConfig().get(event.getPlayer().getName()) == null)
             {
                 plugin.getPlayerConfig().set(event.getPlayer().getName(), new CurrentPlayer(playerId, new Quest(currentQuest.getName(), currentQuest.getDescription())));

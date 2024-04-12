@@ -39,8 +39,10 @@ public final class Questreward extends JavaPlugin
     private JoinListener joinListener;
     private File questFile;
     private File playerFile;
+    private File databaseFile;
     private FileConfiguration questConfig;
     private FileConfiguration playerConfig;
+    private FileConfiguration databaseConfig;
 
     @Override
     public void onEnable()
@@ -63,6 +65,7 @@ public final class Questreward extends JavaPlugin
     {
         questFile = new File(getDataFolder(), "config.yml");
         playerFile = new File(getDataFolder(), "player.yml");
+        databaseFile = new File(getDataFolder(), "database.yml");
         if (!questFile.exists())
         {
             questFile.getParentFile().mkdirs();
@@ -73,17 +76,24 @@ public final class Questreward extends JavaPlugin
             playerFile.getParentFile().mkdirs();
             saveResource("player.yml", false);
         }
+        if(!databaseFile.exists())
+        {
+            databaseFile.getParentFile().mkdir();
+            saveResource("database.yml", false);
+        }
 
         questConfig = new YamlConfiguration();
         playerConfig = new YamlConfiguration();
+        databaseConfig = new YamlConfiguration();
 
-        plugin.getQuestConfig().set("test", new Quest("quest1", "do something"));
+        plugin.getQuestConfig().set("quest1", new Quest("quest1", "do something"));
 
         try
         {
             saveConfig(questConfig, questFile);
             questConfig.load(questFile);
             playerConfig.load(playerFile);
+            databaseConfig.load(databaseFile);
         }
         catch (IOException | InvalidConfigurationException e)
         {
@@ -93,7 +103,10 @@ public final class Questreward extends JavaPlugin
 
     public void onload()
     {
-        questlist.add((Quest) plugin.getQuestConfig().get("test"));
+        for(int i = 1; plugin.getQuestConfig().get("quest" + i) != null; i++)
+        {
+            questlist.add((Quest) plugin.getQuestConfig().get("quest" + i));
+        }
     }
 
     public void registerCommands()
@@ -170,6 +183,10 @@ public final class Questreward extends JavaPlugin
         return questFile;
     }
 
+    public ArrayList<Quest> getQuestlist()
+    {
+        return questlist;
+    }
 
     public HashMap<UUID, CurrentPlayer> getPlayers()
     {
